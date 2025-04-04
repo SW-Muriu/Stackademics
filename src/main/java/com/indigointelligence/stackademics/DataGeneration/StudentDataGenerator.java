@@ -8,6 +8,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Random;
 
 
+@Service
 public class StudentDataGenerator {
 
     private static final Random random = new Random();
