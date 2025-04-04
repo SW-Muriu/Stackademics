@@ -1,5 +1,7 @@
 package com.indigointelligence.stackademics.User;
 
+import com.indigointelligence.stackademics.User.Records.LoginRequest;
+import com.indigointelligence.stackademics.User.Records.LoginResponse;
 import com.indigointelligence.stackademics.Utils.EntityResponse.EntityResponse;
 import com.indigointelligence.stackademics.Utils.Security.JwtUtil.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
