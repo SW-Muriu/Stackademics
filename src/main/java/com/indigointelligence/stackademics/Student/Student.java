@@ -1,6 +1,6 @@
 package com.indigointelligence.stackademics.Student;
 
-import com.indigointelligence.stackademics.Utils.EntityResponse.AuditParameters;
+import com.indigointelligence.stackademics.Utils.AuditParameters.AuditParameters;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

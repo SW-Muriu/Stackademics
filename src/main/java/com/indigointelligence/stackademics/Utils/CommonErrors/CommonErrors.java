@@ -1,7 +1,10 @@
-package com.indigointelligence.stackademics.Utils.EntityResponse;
+package com.indigointelligence.stackademics.Utils.CommonErrors;
 
+import com.indigointelligence.stackademics.Utils.EntityResponse.EntityResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
+@Service
 public class CommonErrors {
 
     public EntityResponse<?> error500() {

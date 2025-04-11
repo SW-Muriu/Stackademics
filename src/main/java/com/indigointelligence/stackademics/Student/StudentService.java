@@ -1,7 +1,7 @@
 package com.indigointelligence.stackademics.Student;
 
-import com.indigointelligence.stackademics.Utils.EntityResponse.CommonErrors;
-import com.indigointelligence.stackademics.Utils.EntityResponse.CommonSuccess;
+import com.indigointelligence.stackademics.Utils.CommonErrors.CommonErrors;
+import com.indigointelligence.stackademics.Utils.CommonSuccess.CommonSuccess;
 import com.indigointelligence.stackademics.Utils.EntityResponse.EntityResponse;
 import com.indigointelligence.stackademics.Utils.EntityResponse.Pagination;
 import lombok.extern.slf4j.Slf4j;

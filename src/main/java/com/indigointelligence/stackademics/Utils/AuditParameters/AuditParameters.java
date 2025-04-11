@@ -1,4 +1,4 @@
-package com.indigointelligence.stackademics.Utils.EntityResponse;
+package com.indigointelligence.stackademics.Utils.AuditParameters;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.MappedSuperclass;
