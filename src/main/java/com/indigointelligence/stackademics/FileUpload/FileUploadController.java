@@ -5,15 +5,12 @@ import com.indigointelligence.stackademics.Utils.EntityResponse.EntityResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @CrossOrigin
-@RequestMapping("api/vi/file/")
+@RequestMapping("api/v1/data")
 public class FileUploadController {
 
 
@@ -21,7 +18,8 @@ public class FileUploadController {
     private FileUploadService fileUploadService;
 
 
-    public EntityResponse<?> uploadFile(@RequestParam("file")MultipartFile file) {
+    @PostMapping("/file")
+    public EntityResponse<?> uploadFile(@RequestParam("file") MultipartFile file) {
         try {
 
             if (file.isEmpty() || !file.getOriginalFilename().endsWith(".xlsx")) {

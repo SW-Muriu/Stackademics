@@ -1,8 +1,9 @@
 package com.indigointelligence.stackademics.DataGeneration;
 
 
+import com.indigointelligence.stackademics.ProcessCounter.ProcessCounter;
+import com.indigointelligence.stackademics.ProcessCounter.ProcessCounterService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.sl.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -25,6 +26,9 @@ public class DataGenerationService {
     private static final int MAX_RECORDS = 1_000_000;
     @Value("${file.storage.path}")
     private String basePath;
+
+    @Autowired
+    private ProcessCounterService processCounter;
 
 
     private final StudentDataGenerator studentDataGenerator;
@@ -92,6 +96,8 @@ public class DataGenerationService {
             try(FileOutputStream fos = new FileOutputStream(filePath)) {
                 workbook.write((fos));
             }
+
+            processCounter.trackSuccess("generateStudentData");
 
         }
 

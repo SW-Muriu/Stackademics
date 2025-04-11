@@ -1,5 +1,6 @@
 package com.indigointelligence.stackademics.DataProcessing;
 
+import com.indigointelligence.stackademics.ProcessCounter.ProcessCounterService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -9,6 +10,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -37,8 +39,14 @@ public class DataProcessingService {
     @Value("${file.storage.path}")
     private String basePath;
 
+    @Autowired
+    private ProcessCounterService processCounterService;
+
     public String processLatestExcelFile() throws Exception {
-        File directory = new File(basePath + "dataProcessing/");
+        File directory = new File(basePath + "dataprocessing/");
+
+        System.out.println("Selected file path: " + directory);
+
         File[] excelFiles = directory.listFiles((dir, name) -> name.endsWith(".xlsx"));
 
         if (excelFiles == null || excelFiles.length ==0) {
@@ -61,7 +69,7 @@ public class DataProcessingService {
         //Generate CSV path
         String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
         String csvFileNAME = "processed_students_" + timeStamp + ".csv";
-        String csvFilePath = "dataprocessing/" + csvFileNAME;
+        String csvFilePath = basePath + "dataprocessing/" + csvFileNAME;
 
 
         //Build csv file
@@ -87,6 +95,7 @@ public class DataProcessingService {
             }
         }
         logger.info("Processed Excel File {} to CSV: {}", latestFile.getPath(), csvFilePath);
+        processCounterService.trackSuccess("processLatestExcelFile");
         return csvFilePath;
     }
 }

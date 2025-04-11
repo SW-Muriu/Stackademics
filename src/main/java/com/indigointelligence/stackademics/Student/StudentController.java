@@ -4,6 +4,8 @@ import com.indigointelligence.stackademics.Utils.EntityResponse.EntityResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.sound.midi.Soundbank;
+
 @RestController
 @CrossOrigin
 @RequestMapping("/api/v1/student/")
@@ -17,7 +19,7 @@ public class StudentController {
         return studentService.postStudent(student);
     }
 
-    @GetMapping("get")
+    @GetMapping("all")
     public EntityResponse<?> getAllStudents(
             @RequestParam(required = false) Integer pageSize,
             @RequestParam(required = false) Integer pageIndex,
@@ -32,6 +34,7 @@ public class StudentController {
 
     @DeleteMapping("delete")
     public EntityResponse<?> deleteStudent(@RequestBody Student student){
+        System.out.println(student.getStudentId());
         return studentService.deleteStudent(student);
     }
 }
