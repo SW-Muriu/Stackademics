@@ -37,7 +37,7 @@ public class StudentController {
         return studentService.updateStudent(student);
     }
 
-    @DeleteMapping("delete")
+    @PutMapping("delete")
     public EntityResponse<?> deleteStudent(@RequestBody Student student){
         System.out.println(student.getStudentId());
         return studentService.deleteStudent(student);
