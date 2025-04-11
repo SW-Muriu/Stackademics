@@ -5,7 +5,7 @@
 ### Tech Stack:
 - **Backend**: Spring Boot (Java >= 17)  
 - **Frontend**: Angular (>=18)  
-- **Database**: Microsoft SQL Server  
+- **Database**: MariDB(MySQL fork, so ni similar)  
 - **System Architecture**: Your choice  
 
 ---
@@ -50,7 +50,8 @@
   - `photoPath`: String (Default: empty string)  
 
 - **Excel file generation**:  
-  - Windows: `C:\var\log\applications\API\dataprocessing\<excel-file-name>`  
+  - Windows: `C:\var\log\applications\API\dataprocessing\<excel-file-name>`
+  - At this point though, you can change and insert any path. Made dynamic by placing the value in application properties
   - Linux: Similar path structure  
 
 - **Edge Case Handling**:  
@@ -89,7 +90,8 @@
   - Rename the file by adding the **student ID** as a prefix and save it in:  
     - Windows: `C:\var\log\applications\API\StudentPhotos\<studentId>-<filename>`  
     - Linux: Similar path  
-  - Update the database record with the new **photoPath**.  
+  - Update the database record with the new **photoPath**. 
+  - This is yet to be done
 
 ---
 

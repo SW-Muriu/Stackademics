@@ -37,7 +37,7 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-	// P6Spy for SQL Logging (Optional)
+	// P6Spy for SQL Logging so I can track my hibernate changes
 	implementation 'p6spy:p6spy:3.9.1'
 
 	// Apache POI for Excel
