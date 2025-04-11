@@ -7,6 +7,10 @@ import com.indigointelligence.stackademics.Utils.EntityResponse.EntityResponse;
 import com.indigointelligence.stackademics.Utils.EntityResponse.Pagination;
 import com.indigointelligence.stackademics.Utils.PageMetaData.PageMetaData;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +21,8 @@ import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -145,5 +151,43 @@ public class StudentService {
             logger.error("Error deleting student with ID: " + incomingStudent.getStudentId(), e);
             return commonErrors.error500();
         }
+    }
+
+    public byte[] generateStudentReport() throws IOException {
+        List<Student> students = studentRepository.findByStatus(1);
+
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("Students Report");
+
+        Row headerRow = sheet.createRow(0);
+        String[] columns = {"ID", "First Name", "Last Name", "DOB", "Class", "Score", "Status", "Photo Path"};
+
+        for (int i = 0; i < columns.length; i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(columns[i]);
+        }
+
+        int rowNum = 1;
+        for (Student student : students) {
+            Row row = sheet.createRow(rowNum++);
+            row.createCell(0).setCellValue(student.getStudentId());
+            row.createCell(1).setCellValue(student.getFirstName());
+            row.createCell(2).setCellValue(student.getLastName());
+            row.createCell(3).setCellValue(student.getDob().toString());
+            row.createCell(4).setCellValue(student.getClassName());
+            row.createCell(5).setCellValue(student.getScore());
+            row.createCell(6).setCellValue(student.getStatus());
+            row.createCell(7).setCellValue(student.getPhotoPath() != null ? student.getPhotoPath() : "");
+        }
+
+        for (int i = 0; i < columns.length; i++) {
+            sheet.autoSizeColumn(i);
+        }
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        workbook.write(outputStream);
+        workbook.close();
+        return outputStream.toByteArray();
+
     }
 }
