@@ -145,6 +145,8 @@ public class StudentService {
                 incomingStudent.setDeletedTime(LocalDateTime.now());
                 incomingStudent.setStatus(0);
 
+                studentRepository.save(incomingStudent);
+
                 return commonSuccess.empty200();
             }
         } catch (Exception e) {
