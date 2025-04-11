@@ -1,9 +1,11 @@
 package com.indigointelligence.stackademics.Student;
 
+import com.indigointelligence.stackademics.ProcessCounter.ProcessCounterService;
 import com.indigointelligence.stackademics.Utils.CommonErrors.CommonErrors;
 import com.indigointelligence.stackademics.Utils.CommonSuccess.CommonSuccess;
 import com.indigointelligence.stackademics.Utils.EntityResponse.EntityResponse;
 import com.indigointelligence.stackademics.Utils.EntityResponse.Pagination;
+import com.indigointelligence.stackademics.Utils.PageMetaData.PageMetaData;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,10 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +35,9 @@ public class StudentService {
     CommonSuccess commonSuccess;
 
     private final static Logger logger = LoggerFactory.getLogger(Student.class);
+
+    @Autowired
+    private ProcessCounterService processCounterService;
 
     public EntityResponse<?> postStudent(Student incomdingStudent) {
 
@@ -56,9 +63,12 @@ public class StudentService {
 
             Pageable pageable = PageRequest.of(effectivePageIndex, effectivePageSize);
 
-            Page<Student> studentPage = (searchTerm != null && !searchTerm.trim().isEmpty())
-                    ? studentRepository.findByStatusAndFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(
-                    1, searchTerm, searchTerm, pageable)
+            boolean validSearch = searchTerm != null && !searchTerm.trim().isEmpty() &&
+                    !"undefined".equalsIgnoreCase(searchTerm.trim()) &&
+                    !"searchTerm".equalsIgnoreCase(searchTerm.trim());
+
+            Page<Student> studentPage = validSearch
+                    ? studentRepository.searchByStatusAndName(1, searchTerm, pageable)
                     : studentRepository.findByStatus(1, pageable);
 
             List<Student> existingStudents = studentPage.getContent();
@@ -67,27 +77,22 @@ public class StudentService {
                 return commonErrors.error404();
             }
 
-            Pagination pagination = new Pagination() {
-                @Override
-                public int pageSize() {
-                    return studentPage.getSize();
-                }
+            PageMetaData pagination = new PageMetaData(
+                    studentPage.getSize(),
+                    studentPage.getNumber(),
+                    (int) studentPage.getTotalElements()
+            );
 
-                @Override
-                public int pageIndex() {
-                    return studentPage.getNumber();
-                }
-
-                @Override
-                public int totalRecords() {
-                    return (int) studentPage.getTotalElements();
-                }
-            };
+            //Process Runs
+            int dataProcessRuns = processCounterService.getSuccessCount("processLatestExcelFile");
+            int dataGenerationRuns = processCounterService.getSuccessCount("generateStudentData");
+            int studentUploadRuns = processCounterService.getSuccessCount("processAndSaveExcelFile");
+            StudentStatsResponse stats = new StudentStatsResponse(existingStudents, dataProcessRuns, dataGenerationRuns, studentUploadRuns);
 
             return EntityResponse.builder()
                     .statusCode(HttpStatus.OK.value())
                     .message("Student(s) fetched successfully")
-                    .entity(existingStudents)
+                    .entity(stats)
                     .pagination(pagination)
                     .build();
 
